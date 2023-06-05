@@ -41,6 +41,8 @@ tf.app.flags.DEFINE_string("emg_eval_data", "../data/eval_data_1.mat", "Point to
 tf.app.flags.DEFINE_string("emg_test_data", "../test_data.mat", "Point to directory of input data")
 tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
 tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
+tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
+tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
 
 tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
 
