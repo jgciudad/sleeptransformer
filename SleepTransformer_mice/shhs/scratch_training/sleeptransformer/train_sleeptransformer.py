@@ -84,7 +84,8 @@ config.frame_seq_len = FLAGS.frame_seq_len
 config.frm_maxlen = FLAGS.frame_seq_len
 config.epoch_seq_len = FLAGS.seq_len
 config.seq_maxlen = FLAGS.seq_len
-config.training_epoch = FLAGS.training_epoch*config.epoch_seq_len
+# config.training_epoch = FLAGS.training_epoch*config.epoch_seq_len
+config.training_epoch = 1
 
 if (FLAGS.num_blocks > 0):
     config.frm_num_blocks = FLAGS.num_blocks
