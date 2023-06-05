@@ -47,6 +47,7 @@ tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
 tf.app.flags.DEFINE_integer("num_blocks", 0, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
 tf.app.flags.DEFINE_integer("frm_num_blocks", 1, "Number of transformer block (default: 0)")
 tf.app.flags.DEFINE_integer("seq_num_blocks", 1, "Number of transformer block (default: 0)")
+tf.app.flags.DEFINE_integer("training_epoch", 10, "Number of training epochs (default: 10)")
 tf.app.flags.DEFINE_float("frm_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
 tf.app.flags.DEFINE_float("frm_attention_dropout", 0.1, "Dropout keep probability (default: 0.1)")
 tf.app.flags.DEFINE_float("seq_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
@@ -78,7 +79,7 @@ config.frame_seq_len = FLAGS.frame_seq_len
 config.frm_maxlen = FLAGS.frame_seq_len
 config.epoch_seq_len = FLAGS.seq_len
 config.seq_maxlen = FLAGS.seq_len
-config.training_epoch = 10*config.epoch_seq_len
+config.training_epoch = FLAGS.training_epoch*config.epoch_seq_len
 
 if (FLAGS.num_blocks > 0):
     config.frm_num_blocks = FLAGS.num_blocks
@@ -166,7 +167,7 @@ elif(eog_active and emg_active):
                                              #data_shape_1=[config.deep_ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
-                                             nclasses = config.nclass, 
+                                             nclasses = config.nclass,
                                              shuffle=False)
     #test_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_test_data),
     #                                              eog_filelist=os.path.abspath(FLAGS.eog_test_data),
