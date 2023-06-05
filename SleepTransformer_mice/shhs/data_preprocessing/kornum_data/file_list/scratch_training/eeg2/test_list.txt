@@ -1,0 +1,11 @@
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0011_eeg2.mat	3602
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0014_eeg2.mat	3601
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0019_eeg2.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0022_eeg2.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0028_eeg2.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0035_eeg2.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0039_eeg2.mat	7302
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0043_eeg2.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0047_eeg2.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0050_eeg2.mat	21601
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\n0051_eeg2.mat	21600

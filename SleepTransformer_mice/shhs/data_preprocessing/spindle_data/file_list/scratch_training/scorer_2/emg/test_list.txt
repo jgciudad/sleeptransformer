@@ -1,0 +1,4 @@
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\spindle_data\mat\scorer_2\n0002_emg.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\spindle_data\mat\scorer_2\n0003_emg.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\spindle_data\mat\scorer_2\n0004_emg.mat	21600
+C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\spindle_data\mat\scorer_2\n0001_emg.mat	21600
