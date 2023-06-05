@@ -20,7 +20,7 @@ class Config(object):
         self.evaluate_every = 100
         self.checkpoint_every = 100
         self.early_stop_count = 200
-        self.num_fold_training_data = 37 # the number of folds to parition the training subjects. To circumvent the memory
+        self.num_fold_training_data = 4 # the number of folds to parition the training subjects. To circumvent the memory
                                         # problem when the data is large, only one fold of the data is alternatively loaded at a time.
         self.num_fold_testing_data = 1
 
