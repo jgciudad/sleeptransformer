@@ -68,6 +68,9 @@ print("")
 # Data Preparatopn
 # ==================================================
 
+path = os.getcwd()
+print(path)
+
 # path where some output are stored
 out_path = os.path.abspath(os.path.join(os.path.curdir,FLAGS.out_dir))
 # path where checkpoint models are stored
