@@ -8,7 +8,7 @@ import h5py
 from datagenerator_from_list_v3 import DataGenerator3
 
 class DataGeneratorWrapper:
-    def __init__(self, eeg_filelist=None, eog_filelist=None, emg_filelist=None, num_fold=1, data_shape_2=np.array([29, 128]), seq_len = 20, shuffle=False):
+    def __init__(self, eeg_filelist=None, eog_filelist=None, emg_filelist=None, num_fold=1, data_shape_2=np.array([29, 128]), seq_len = 20, nclasses=4, shuffle=False):
 
         # Init params
 
@@ -30,7 +30,7 @@ class DataGeneratorWrapper:
         self.sub_folds = []
 
         self.seq_len = seq_len
-        self.Ncat = 5 # five-class sleep staging
+        self.Ncat = nclasses # five-class sleep staging
 
         self.shuffle = shuffle
 
@@ -180,7 +180,8 @@ class DataGeneratorWrapper:
                                  file_sizes,
                                  #data_shape_1=self.data_shape_1,
                                  data_shape_2=self.data_shape_2,
-                                 seq_len=self.seq_len)
+                                 seq_len=self.seq_len,
+                                 Ncat=self.Ncat)
         #self.gen.X1 = np.expand_dims(self.gen.X1, axis=-1) # expand feature dimension
         self.gen.normalize(self.eeg_meanX, self.eeg_stdX)
 

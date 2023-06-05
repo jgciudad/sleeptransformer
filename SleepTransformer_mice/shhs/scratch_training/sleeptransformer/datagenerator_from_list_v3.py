@@ -7,7 +7,7 @@ import numpy as np
 import h5py
 
 class DataGenerator3:
-    def __init__(self, list_of_files, file_sizes, data_shape_2=np.array([29, 128]), seq_len = 20):
+    def __init__(self, list_of_files, file_sizes, data_shape_2=np.array([29, 128]), seq_len = 20, Ncat = 4):
 
         # Init params
         self.list_of_files = list_of_files
@@ -23,7 +23,7 @@ class DataGenerator3:
         self.boundary_index = np.array([])
 
         self.seq_len = seq_len
-        self.Ncat = 5 # five-class sleep staging
+        self.Ncat = Ncat # five-class sleep staging
 
         self.pointer = 0
         self.reduce_pointer = 0
@@ -31,7 +31,7 @@ class DataGenerator3:
         self.reduce_data_index = None
         self.data_size = np.sum(self.file_sizes)
 
-        self.reduce_factor = 10
+        self.reduce_factor = 5
 
         # read data from mat files in the list stored in the file 'filelist'
         self.read_mat_filelist()
