@@ -1,4 +1,4 @@
-s202283@comp-gpu04:/lscratch/javi/data/preprocessed/SleepTransformer_mice/data_preprocessing/kornum_data/mat/n0001_eeg1.mat	3601
+/lscratch/javi/data/preprocessed/SleepTransformer_mice/data_preprocessing/kornum_data/mat/n0001_eeg1.mat	3601
 s202283@comp-gpu04:/lscratch/javi/data/preprocessed/SleepTransformer_mice/data_preprocessing/kornum_data/mat/n0002_eeg1.mat	3602
 s202283@comp-gpu04:/lscratch/javi/data/preprocessed/SleepTransformer_mice/data_preprocessing/kornum_data/mat/n0003_eeg1.mat	3601
 s202283@comp-gpu04:/lscratch/javi/data/preprocessed/SleepTransformer_mice/data_preprocessing/kornum_data/mat/n0004_eeg1.mat	3601
