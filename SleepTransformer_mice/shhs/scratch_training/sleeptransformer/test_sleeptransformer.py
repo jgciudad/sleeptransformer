@@ -75,7 +75,11 @@ if not os.path.isdir(os.path.abspath(out_path)): os.makedirs(os.path.abspath(out
 if not os.path.isdir(os.path.abspath(checkpoint_path)): os.makedirs(os.path.abspath(checkpoint_path))
 
 config = Config()
+config.nclass = FLAGS.nclass
+config.frame_seq_len = FLAGS.frame_seq_len
+config.frm_maxlen = FLAGS.frame_seq_len
 config.epoch_seq_len = FLAGS.seq_len
+config.seq_maxlen = FLAGS.seq_len
 config.epoch_step = FLAGS.seq_len
 
 if (FLAGS.num_blocks > 0):
