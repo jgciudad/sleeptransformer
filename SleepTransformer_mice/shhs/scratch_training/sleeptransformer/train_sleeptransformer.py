@@ -43,6 +43,7 @@ tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
 tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
 tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
 tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
+tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
 
 tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
 
@@ -76,6 +77,7 @@ if not os.path.isdir(os.path.abspath(out_path)): os.makedirs(os.path.abspath(out
 if not os.path.isdir(os.path.abspath(checkpoint_path)): os.makedirs(os.path.abspath(checkpoint_path))
 
 config = Config()
+config.batch_size = FLAGS.batch_size
 config.nclass = FLAGS.nclass
 config.frame_seq_len = FLAGS.frame_seq_len
 config.frm_maxlen = FLAGS.frame_seq_len
@@ -205,7 +207,7 @@ best_acc = 0.0
 early_stop_count = 0
 
 with tf.Graph().as_default():
-    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.475, allow_growth=True)
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.475, allow_growth=False)
     session_conf = tf.ConfigProto(
       allow_soft_placement=FLAGS.allow_soft_placement,
       log_device_placement=FLAGS.log_device_placement,
