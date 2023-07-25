@@ -177,11 +177,11 @@ config.frm_d_model = config.ndim*config.nchannel
 del train_gen_wrapper
 
 with tf.Graph().as_default():
-    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.475, allow_growth=False)
+    # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.475, allow_growth=False)
     session_conf = tf.ConfigProto(
       allow_soft_placement=FLAGS.allow_soft_placement,
-      log_device_placement=FLAGS.log_device_placement,
-      gpu_options=gpu_options)
+      log_device_placement=FLAGS.log_device_placement)
+      # gpu_options=gpu_options)
     sess = tf.Session(config=session_conf)
     with sess.as_default():
         net = SleepTransformer(config=config)
