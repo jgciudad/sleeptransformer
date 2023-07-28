@@ -64,7 +64,7 @@ tf.app.flags.DEFINE_float("fc_dropout", 0.1, "Dropout keep probability (default:
 FLAGS = tf.app.flags.FLAGS
 print("\nParameters:")
 for attr, value in sorted(FLAGS.__flags.items()): # python3
-    print("{}={}".format(attr.upper(), value))
+    print("{}={}".format(attr.upper(), value.value))
 print("")
 
 # Data Preparatopn

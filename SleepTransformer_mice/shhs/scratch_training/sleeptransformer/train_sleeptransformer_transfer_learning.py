@@ -65,7 +65,7 @@ tf.app.flags.DEFINE_boolean("early_stopping", False, "whether to apply early sto
 FLAGS = tf.app.flags.FLAGS
 print("\nParameters:")
 for attr, value in sorted(FLAGS.__flags.items()): # python3
-    print("{}={}".format(attr.upper(), value))
+    print("{}={}".format(attr.upper(), value.value))
 print("")
 
 # Data Preparatopn
