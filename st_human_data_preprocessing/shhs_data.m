@@ -16,15 +16,15 @@ end
 
 dirlist = dir([edf_path, '*.edf']);
 N = numel(dirlist);
-disp('Number of files:')
-disp(N)
+% disp('Number of files:')
+% disp(N)
 % fid = fopen('/home/s202283/holahola.txt','wt');
 % fprintf(fid, num2str(N));
 % fclose(fid);
 
 % parfor n = 1 : N
-% % for n = 1 : N
-%     filename = dirlist(n).name;
-%     disp(filename);
-%     process_and_save_1file(filename, n, xml_path, edf_path, mat_path, fs, n_classes);
-% end
+for n = 1 : N
+    filename = dirlist(n).name;
+    disp(filename);
+    process_and_save_1file(filename, n, xml_path, edf_path, mat_path, fs, n_classes);
+end
