@@ -18,9 +18,9 @@ dirlist = dir([edf_path, '*.edf']);
 N = numel(dirlist);
 disp('Number of files:')
 disp(N)
-fid = fopen('/home/s202283/holahola.txt','wt');
-fprintf(fid, num2str(N));
-fclose(fid);
+% fid = fopen('/home/s202283/holahola.txt','wt');
+% fprintf(fid, num2str(N));
+% fclose(fid);
 
 % parfor n = 1 : N
 % % for n = 1 : N
