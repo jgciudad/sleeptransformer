@@ -22,9 +22,9 @@ fid = fopen('/home/s202283/holahola.txt','wt');
 fprintf(fid, num2str(N));
 fclose(fid);
 
-parfor n = 1 : N
-% for n = 1 : N
-    filename = dirlist(n).name;
-    disp(filename);
-    process_and_save_1file(filename, n, xml_path, edf_path, mat_path, fs, n_classes);
-end
+% parfor n = 1 : N
+% % for n = 1 : N
+%     filename = dirlist(n).name;
+%     disp(filename);
+%     process_and_save_1file(filename, n, xml_path, edf_path, mat_path, fs, n_classes);
+% end
