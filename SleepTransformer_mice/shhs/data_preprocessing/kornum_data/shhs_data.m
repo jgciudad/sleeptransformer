@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-addpath('C:\Users\javig\Documents\Drive\DTU\MASTER THESIS\Code\EEG_scoring\SleepTransformer_mice\edf_reader');
+addpath('C:\Users\javig\Documents\Drive\DTU\MASTER_THESIS\Code\EEG_scoring\SleepTransformer_mice\edf_reader');
 
 data_kornum_path = 'C:\Users\javig\Documents\THESIS_DATA\Raw kornum lab data\Laura-EEGdata_cleaned\data-Kornum';
 mat_path = './mat/';
