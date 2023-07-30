@@ -23,8 +23,8 @@ N = numel(dirlist);
 % fclose(fid);
 
 tic
-% parfor n = 1 : N
-for n = 1 : N
+parfor n = 1 : N
+% for n = 1 : N
     filename = dirlist(n).name;
     disp(filename);
     process_and_save_1file(filename, n, xml_path, edf_path, mat_path, fs, n_classes);
