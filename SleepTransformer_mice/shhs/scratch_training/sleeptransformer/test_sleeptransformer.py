@@ -322,7 +322,7 @@ with tf.Graph().as_default():
         with open(os.path.join(out_dir, "test_time.txt"), "a") as text_file:
             text_file.write("{:g}\n".format((end_time - start_time)))
         
-        hdf5storage.savemat(os.path.join(out_path, "test_ret.mat"),
+        hdf5storage.savemat(os.path.join(out_path, "test_ret_BrownLabS1.mat"),
                 {'yhat': test_yhat, 
                     'acc': test_acc, 
                     'score': test_score, 
