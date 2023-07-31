@@ -4,9 +4,9 @@ clc
 
 addpath('edf_reader');
 
-xml_path = '/scratch/s202283/data/shhs_prepro_prueba/annotations/';
-edf_path = '/scratch/s202283/data/shhs_prepro_prueba/edf/';
-mat_path = '/scratch/s202283/data/mat_prepro_prueba/';
+xml_path = '/scratch/s202283/data/shhs_prepro_prueba100/annotations/';
+edf_path = '/scratch/s202283/data/shhs_prepro_prueba100/edf/';
+mat_path = '/scratch/s202283/data/mat_prepro_prueba100_for/';
 fs = 128;
 n_classes = 5;
 
