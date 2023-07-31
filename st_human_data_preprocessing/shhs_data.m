@@ -6,7 +6,7 @@ addpath('edf_reader');
 
 xml_path = '/scratch/s202283/data/shhs/polysomnography/annotations-events-nsrr/shhs1/';
 edf_path = '/scratch/s202283/data/shhs/polysomnography/edfs/shhs1/';
-mat_path = '/scratch/s202283/data/mat_human_sleeptransformer/';
+mat_path = '/scratch/s202283/data/mat_human_sleeptransformer_5_classes/';
 fs = 128;
 n_classes = 5;
 

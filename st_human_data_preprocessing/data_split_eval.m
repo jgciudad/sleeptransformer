@@ -9,7 +9,7 @@ rng(10); % for repeatable
 % between various networks
 
 % Nsub = 5463;
-Nsub = 400;
+Nsub = 569;
 
 subjects = randperm(Nsub);
 
@@ -21,8 +21,9 @@ rest = setdiff(subjects, test_sub);
 perm_list = randperm(numel(rest));
 
 % 50 subjects as eval set
-eval_sub = sort(rest(perm_list(1:100)));
-train_check_sub = sort(rest(perm_list(101:200)));
-train_sub = sort(rest(perm_list(101:end)));
+eval_sub = sort(rest(perm_list(1:75)));
+% train_check_sub = sort(rest(perm_list(76:200)));
+train_sub = sort(rest(perm_list(76:end)));
 
-save('./data_split_eval.mat', 'train_sub','test_sub','eval_sub','train_check_sub');
+% save('./data_split_eval.mat', 'train_sub','test_sub','eval_sub','train_check_sub');
+save('./data_split_eval.mat', 'train_sub','test_sub','eval_sub');
