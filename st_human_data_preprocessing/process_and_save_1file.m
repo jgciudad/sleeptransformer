@@ -26,7 +26,13 @@ function [ret] = process_and_save_1file(filename, n, xml_path, edf_path, mat_pat
     b_band = fir1(Nfir,[0.3 40].*2/fs,'bandpass'); % bandpass
     eeg_1 = filtfilt(b_band,1,eeg_1);
     
-    [eeg_2, ori_fs] = read_shhs_edfrecords([edf_path, filename], {'EEGsec'});
+    try 
+        [eeg_2, ori_fs] = read_shhs_edfrecords([edf_path, filename], {'EEGsec'});
+    catch ME
+        if strcmp(ME.message, 'EDFREAD: The signal(s) you requested were not detected.')
+            [eeg_2, ori_fs] = read_shhs_edfrecords([edf_path, filename], {'EEG2'});
+        end
+    end
     if(ori_fs ~= fs) % resampling
         eeg_2 = resample(eeg_2, fs, ori_fs);
     end
