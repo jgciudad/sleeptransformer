@@ -9,7 +9,9 @@ rng(10); % for repeatable
 % between various networks
 
 % Nsub = 5463;
-Nsub = 569;
+% mat_path = '/scratch/s202283/data/mat_human_sleeptransformer_5_classes/';
+% dirlist = dir([mat_path, '*.mat']);
+% Nsub = numel(dirlist);
 
 subjects = randperm(Nsub);
 

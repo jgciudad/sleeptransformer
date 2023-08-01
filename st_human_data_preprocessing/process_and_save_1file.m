@@ -1,4 +1,4 @@
-function [ret] = process_and_save_1file(filename, n, xml_path, edf_path, mat_path, fs, n_classes)
+function [ret, counter] = process_and_save_1file(filename, n, xml_path, edf_path, mat_path, fs, n_classes, counter)
     
     ret = 1;
     
@@ -199,7 +199,7 @@ function [ret] = process_and_save_1file(filename, n, xml_path, edf_path, mat_pat
     clear X_eeg1_ X_eeg2_ X_emg_
     
     if(count > 0)
-        disp([num2str(n), ': ', num2str(count),' inf epochs removed']);
+        disp([num2str(counter), ': ', num2str(count),' inf epochs removed']);
         stages(inf_ind) = [];
         y(inf_ind,:) = [];
         eeg1_epochs(inf_ind,:) = [];
@@ -222,17 +222,19 @@ function [ret] = process_and_save_1file(filename, n, xml_path, edf_path, mat_pat
     label = single(stages);
     X2 = single(X_eeg1);
     X1 = single(eeg1_epochs);
-    save([mat_path, 'n', num2str(n,'%04d'),'_eeg1.mat'], 'X1', 'X2', 'label', 'y', '-v7.3');
-    disp([mat_path, 'n', num2str(n,'%04d'),'_eeg1.mat'])
+    save([mat_path, 'n', num2str(counter,'%04d'),'_eeg1.mat'], 'X1', 'X2', 'label', 'y', '-v7.3');
+    disp([mat_path, 'n', num2str(counter,'%04d'),'_eeg1.mat'])
     
     X2 = single(X_eeg2);
     X1 = single(eeg2_epochs);
-    save([mat_path, 'n', num2str(n,'%04d'),'_eeg2.mat'], 'X1', 'X2', 'label', 'y', '-v7.3');
-    disp([mat_path, 'n', num2str(n,'%04d'),'_eeg2.mat'])
+    save([mat_path, 'n', num2str(counter,'%04d'),'_eeg2.mat'], 'X1', 'X2', 'label', 'y', '-v7.3');
+    disp([mat_path, 'n', num2str(counter,'%04d'),'_eeg2.mat'])
     
     X2 = single(X_emg);
     X1 = single(emg_epochs);
-    save([mat_path, 'n', num2str(n,'%04d'),'_emg.mat'], 'X1', 'X2', 'label', 'y', '-v7.3');
-    disp([mat_path, 'n', num2str(n,'%04d'),'_emg.mat'])
+    save([mat_path, 'n', num2str(counter,'%04d'),'_emg.mat'], 'X1', 'X2', 'label', 'y', '-v7.3');
+    disp([mat_path, 'n', num2str(counter,'%04d'),'_emg.mat'])
     clear X1 X2 label y
+    
+    counter = counter+1;
 end
