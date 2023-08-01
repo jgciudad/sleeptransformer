@@ -191,7 +191,8 @@ class DataGeneratorWrapper:
                                  file_sizes,
                                  #data_shape_1=self.data_shape_1,
                                  data_shape_2=self.data_shape_2,
-                                 seq_len=self.seq_len)
+                                 seq_len=self.seq_len,
+                                 Ncat=self.Ncat)
             #eog_gen.X1 = np.expand_dims(eog_gen.X1, axis=-1) # expand feature dimension
             eog_gen.normalize(self.eog_meanX, self.eog_stdX)
 
@@ -201,7 +202,8 @@ class DataGeneratorWrapper:
                                  file_sizes,
                                  #data_shape_1=self.data_shape_1,
                                  data_shape_2=self.data_shape_2,
-                                 seq_len=self.seq_len)
+                                 seq_len=self.seq_len,
+                                 Ncat=self.Ncat)
             #emg_gen.X1 = np.expand_dims(emg_gen.X1, axis=-1) # expand feature dimension
             emg_gen.normalize(self.emg_meanX, self.emg_stdX)
 
