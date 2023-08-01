@@ -9,10 +9,10 @@ clc
 
 rng(10); % for repeatable
 
-mat_path = '/scratch/s202283/data/mat_human_sleeptransformer_5_classes/';
+mat_path = '/scratch/s202283/data/mat_human_sleeptransformer_3_classes/';
 load('./data_split_eval.mat');
 
-tf_path = './file_list/5_classes/eeg1/';
+tf_path = './file_list/3_classes/eeg1/';
 if(~exist(tf_path, 'dir'))
     mkdir(tf_path);
 end
@@ -66,7 +66,7 @@ fclose(fid);
 clear fid file_path
 
 
-tf_path = './file_list/5_classes/eeg2/';
+tf_path = './file_list/3_classes/eeg2/';
 if(~exist(tf_path, 'dir'))
     mkdir(tf_path);
 end
@@ -120,7 +120,7 @@ fclose(fid);
 clear fid file_path
 
 
-tf_path = './file_list/5_classes/emg/';
+tf_path = './file_list/3_classes/emg/';
 if(~exist(tf_path, 'dir'))
     mkdir(tf_path);
 end
