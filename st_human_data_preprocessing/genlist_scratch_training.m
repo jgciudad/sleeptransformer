@@ -23,7 +23,7 @@ for i = 1 : numel(train_sub)
     sname = ['n', num2str(train_sub(i),'%04d'),'_eeg1.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
@@ -47,7 +47,7 @@ for i = 1 : numel(eval_sub)
     sname = ['n', num2str(eval_sub(i),'%04d'),'_eeg1.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
@@ -59,7 +59,7 @@ for i = 1 : numel(test_sub)
     sname = ['n', num2str(test_sub(i),'%04d'),'_eeg1.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
@@ -77,7 +77,7 @@ for i = 1 : numel(train_sub)
     sname = ['n', num2str(train_sub(i),'%04d'),'_eeg2.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
@@ -101,7 +101,7 @@ for i = 1 : numel(eval_sub)
     sname = ['n', num2str(eval_sub(i),'%04d'),'_eeg2.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
@@ -113,7 +113,7 @@ for i = 1 : numel(test_sub)
     sname = ['n', num2str(test_sub(i),'%04d'),'_eeg2.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
@@ -131,7 +131,7 @@ for i = 1 : numel(train_sub)
     sname = ['n', num2str(train_sub(i),'%04d'),'_emg.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
@@ -155,7 +155,7 @@ for i = 1 : numel(eval_sub)
     sname = ['n', num2str(eval_sub(i),'%04d'),'_emg.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
@@ -167,7 +167,7 @@ for i = 1 : numel(test_sub)
     sname = ['n', num2str(test_sub(i),'%04d'),'_emg.mat'];
     load([mat_path,sname], 'label');
     num_sample = numel(label);
-    file_path = ['../../mat/',sname];
+    file_path = [mat_path,sname];
     fprintf(fid, '%s\t%d\n', file_path, num_sample);
 end
 fclose(fid);
