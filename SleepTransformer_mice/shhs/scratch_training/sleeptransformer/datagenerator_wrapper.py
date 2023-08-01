@@ -93,6 +93,7 @@ class DataGeneratorWrapper:
         count = 0
         print('Computing normalization parameters')
         for i in range(len(list_of_files)):
+            print(list_of_files[i])
             X2 = self.read_X2_from_mat_file(list_of_files[i].strip())
             Ni = len(X2)
             X2 = np.reshape(X2,(Ni*self.data_shape_2[0], self.data_shape_2[1]))
