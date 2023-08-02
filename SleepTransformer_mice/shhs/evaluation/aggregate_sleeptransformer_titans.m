@@ -100,7 +100,7 @@ function collection = aggregate_sleeptransformer_titans(nchan)
     mean_fscore = mean(fscore)
     mean_sensitivity = mean(sensitivity)
     mean_specificity = mean(specificity)
-    kappa = kappaindex(yh,yt,4)
+    kappa = kappaindex(yh,yt,5)
     
     
     str = '';
