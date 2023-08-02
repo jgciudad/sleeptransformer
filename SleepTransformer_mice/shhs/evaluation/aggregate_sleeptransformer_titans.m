@@ -124,9 +124,9 @@ function collection = aggregate_sleeptransformer_titans(nchan)
     collection = [acc, mean_fscore, kappa, mean_sensitivity, mean_specificity];
     
     if filter_out_artifacts==0
-        Stages = ["Stage";"WAKE";"NREM";"REM";"ART"]; % W=1, N=2, R=3, A=4
-        Acc = ["Acc"; acc; "-"; "-"; "-"];
-        Kappa = ["Kappa"; kappa; "-"; "-"; "-"];
+        Stages = ["Stage";"WAKE";"N1";"N2";"N3";"REM"]; % W=1, N=2, R=3, A=4
+        Acc = ["Acc"; acc; "-"; "-"; "-"; "-"];
+        Kappa = ["Kappa"; kappa; "-"; "-"; "-"; "-"];
     else
         Stages = ["Stage";"WAKE";"NREM";"REM"];
         Acc = ["Acc"; acc; "-"; "-"];
