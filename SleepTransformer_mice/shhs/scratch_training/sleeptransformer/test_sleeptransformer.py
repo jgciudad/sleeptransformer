@@ -125,12 +125,14 @@ if (not eog_active and not emg_active):
                                              #data_shape_1=[config.ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],  # excluding 0th element
                                              seq_len = config.epoch_seq_len,
+                                             nclasses = config.nclass,
                                              shuffle=True)
     test_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_test_data),
                                              num_fold=config.num_fold_testing_data,
                                              #data_shape_1=[config.ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
+                                             nclasses = config.nclass,
                                              shuffle=False)
     train_gen_wrapper.compute_eeg_normalization_params()
     test_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
@@ -144,6 +146,7 @@ elif(eog_active and not emg_active):
                                              #data_shape_1=[config.deep_ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
+                                             nclasses = config.nclass,
                                              shuffle=True)
     test_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_test_data),
                                                   eog_filelist=os.path.abspath(FLAGS.eog_test_data),
@@ -151,6 +154,7 @@ elif(eog_active and not emg_active):
                                              #data_shape_1=[config.deep_ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
+                                             nclasses = config.nclass,
                                              shuffle=False)
     train_gen_wrapper.compute_eeg_normalization_params()
     train_gen_wrapper.compute_eog_normalization_params()
@@ -166,6 +170,7 @@ elif(eog_active and emg_active):
                                              #data_shape_1=[config.deep_ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
+                                             nclasses = config.nclass,
                                              shuffle=True)
     test_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_test_data),
                                                   eog_filelist=os.path.abspath(FLAGS.eog_test_data),
@@ -174,6 +179,7 @@ elif(eog_active and emg_active):
                                              #data_shape_1=[config.deep_ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
+                                             nclasses = config.nclass,
                                              shuffle=False)
     train_gen_wrapper.compute_eeg_normalization_params()
     train_gen_wrapper.compute_eog_normalization_params()
