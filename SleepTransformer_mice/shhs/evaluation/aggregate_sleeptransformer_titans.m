@@ -1,13 +1,15 @@
-function collection = aggregate_sleeptransformer_local(nchan)
-    
-    filter_out_artifacts = 1;
+function collection = aggregate_sleeptransformer_titans(nchan)
+    %it's the same but just changing the paths to the ones in titans
+
+    filter_out_artifacts = 0;
     nchan=1;
     Nfold = 1;
     yh = cell(Nfold,1);
     yt = cell(Nfold,1);
-    mat_path = 'C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\';
+    mat_path = '/scratch/s202283/data/mat_human_sleeptransformer_5_classes/';
+    output_path = "/home/s202283/outputs/st_human_5classes/";
     listing = dir([mat_path, '*_eeg1.mat']);
-    load("C:\Users\javig\Documents\Code\HUMMUSS\SleepTransformer_mice\shhs\data_preprocessing\kornum_data\data_split_eval.mat");
+    load("/home/s202283/code/HUMMUSS/st_human_data_preprocessing/data_split_eval.mat");
     
     acc_novote = [];
     
@@ -26,7 +28,7 @@ function collection = aggregate_sleeptransformer_local(nchan)
         end
         
 %     if(seq_len < 100)
-        load("C:\Users\javig\Documents\Drive\DTU\MASTER_THESIS\PAPER\models\seq_len\seq_len_101_batch_32\test_ret.mat");
+        load("/home/s202283/outputs/st_human_5classes/test_ret.mat");
 % 	else
 % 	    load(['./intepretable_sleep/sleeptransformer_simple_longseq/scratch_training_',num2str(nchan),'chan/n',num2str(fold),'/test_ret.mat']);
 % 	end
@@ -132,5 +134,10 @@ function collection = aggregate_sleeptransformer_local(nchan)
     Prec = ["Prec"; myselectivity];
     F1 = ["F1"; fscore];
     ResultsTable = table(Acc, Kappa, Stages,Sens,Prec,F1);
-    openvar('ResultsTable')
+   
+    if filter_out_artifacts==0
+        writetable(ResultsTable,output_path + 'results_Art.xlsx');
+    else
+        writetable(ResultsTable,output_path + 'results_noArt.xlsx');
+    end
 end
