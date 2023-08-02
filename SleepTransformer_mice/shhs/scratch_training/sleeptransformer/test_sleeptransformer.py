@@ -86,7 +86,7 @@ checkpoint_path = os.path.abspath(os.path.join(out_path,FLAGS.checkpoint_dir))
 if not os.path.isdir(os.path.abspath(out_path)): os.makedirs(os.path.abspath(out_path))
 if not os.path.isdir(os.path.abspath(checkpoint_path)): os.makedirs(os.path.abspath(checkpoint_path))
 
-with open(os.path.join(out_path,'settings.txt'), 'w') as f:
+with open(os.path.join(out_path,'test_settings.txt'), 'w') as f:
     for attr in sorted(flags_dict):  # python3
         f.write("{}={}".format(attr.upper(), flags_dict[attr]))
         f.write('\n')
