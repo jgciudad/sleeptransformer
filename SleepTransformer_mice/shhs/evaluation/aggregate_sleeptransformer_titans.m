@@ -15,7 +15,7 @@ function collection = aggregate_sleeptransformer_titans(nchan)
     
     acc_novote = [];
     
-    seq_len = 101;
+    seq_len = 21;
     for fold = 1 : Nfold
         fold
         %test_s = test_sub{fold};
