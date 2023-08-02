@@ -1,6 +1,8 @@
 function collection = aggregate_sleeptransformer_titans(nchan)
     %it's the same but just changing the paths to the ones in titans
-
+    
+    addpath("/home/s202283/code/HUMMUSS/SleepTransformer_mice/shhs/metrics")
+    
     filter_out_artifacts = 0;
     nchan=1;
     Nfold = 1;
