@@ -55,7 +55,7 @@ function collection = aggregate_sleeptransformer_titans(nchan)
                 N = size(score_i{n},1);
                 %valid_ind{n} = ones(N,1);
 
-                score_i{n} = [ones(seq_len-1,4); score{n}(start_pos:end_pos, :)];
+                score_i{n} = [ones(seq_len-1,5); score{n}(start_pos:end_pos, :)];
                 %valid_ind{n} = [zeros(seq_len-1,1); valid_ind{n}]; 
                 score_i{n} = circshift(score_i{n}, -(seq_len - n), 1);
                 %valid_ind{n} = circshift(valid_ind{n}, -(seq_len - n), 1);
