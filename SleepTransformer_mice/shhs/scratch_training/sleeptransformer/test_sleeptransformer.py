@@ -163,15 +163,15 @@ elif(eog_active and not emg_active):
     nchannel = 2
 elif(eog_active and emg_active):
     print("eeg, eog, and emg active")
-    train_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_train_data),
-                                             eog_filelist=os.path.abspath(FLAGS.eog_train_data),
-                                             emg_filelist=os.path.abspath(FLAGS.emg_train_data),
-                                             num_fold=config.num_fold_training_data,
-                                             #data_shape_1=[config.deep_ntime],
-                                             data_shape_2=[config.frame_seq_len, config.ndim],
-                                             seq_len = config.epoch_seq_len,
-                                             nclasses = config.nclass,
-                                             shuffle=True)
+    # train_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_train_data),
+    #                                          eog_filelist=os.path.abspath(FLAGS.eog_train_data),
+    #                                          emg_filelist=os.path.abspath(FLAGS.emg_train_data),
+    #                                          num_fold=config.num_fold_training_data,
+    #                                          #data_shape_1=[config.deep_ntime],
+    #                                          data_shape_2=[config.frame_seq_len, config.ndim],
+    #                                          seq_len = config.epoch_seq_len,
+    #                                          nclasses = config.nclass,
+    #                                          shuffle=True)
     test_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_test_data),
                                                   eog_filelist=os.path.abspath(FLAGS.eog_test_data),
                                                   emg_filelist=os.path.abspath(FLAGS.emg_test_data),
@@ -181,12 +181,20 @@ elif(eog_active and emg_active):
                                              seq_len = config.epoch_seq_len,
                                              nclasses = config.nclass,
                                              shuffle=False)
-    train_gen_wrapper.compute_eeg_normalization_params()
-    train_gen_wrapper.compute_eog_normalization_params()
-    train_gen_wrapper.compute_emg_normalization_params()
-    test_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
-    test_gen_wrapper.set_eog_normalization_params(train_gen_wrapper.eog_meanX, train_gen_wrapper.eog_stdX)
-    test_gen_wrapper.set_emg_normalization_params(train_gen_wrapper.emg_meanX, train_gen_wrapper.emg_stdX)
+
+    # CASE 1: Standardizing with training values
+    # train_gen_wrapper.compute_eeg_normalization_params()
+    # train_gen_wrapper.compute_eog_normalization_params()
+    # train_gen_wrapper.compute_emg_normalization_params()
+    # test_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
+    # test_gen_wrapper.set_eog_normalization_params(train_gen_wrapper.eog_meanX, train_gen_wrapper.eog_stdX)
+    # test_gen_wrapper.set_emg_normalization_params(train_gen_wrapper.emg_meanX, train_gen_wrapper.emg_stdX)
+
+    # CASE 2: Standardizing each signal on its own
+    test_gen_wrapper.compute_eeg_normalization_params_by_signal()
+    test_gen_wrapper.compute_eog_normalization_params_by_signal()
+    test_gen_wrapper.compute_emg_normalization_params_by_signal()
+
     nchannel = 3
 
 config.nchannel = nchannel
@@ -194,7 +202,7 @@ config.seq_d_model = config.ndim*config.nchannel
 config.frm_d_model = config.ndim*config.nchannel
 
 # do not need training data anymore
-del train_gen_wrapper
+# del train_gen_wrapper
 
 with tf.Graph().as_default():
     # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.475, allow_growth=False)

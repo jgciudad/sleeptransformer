@@ -195,12 +195,23 @@ elif(eog_active and emg_active):
     #                                         data_shape_2=[config.frame_seq_len, config.ndim],
     #                                         seq_len = config.epoch_seq_len,
     #                                         shuffle=False)
-    train_gen_wrapper.compute_eeg_normalization_params()
-    train_gen_wrapper.compute_eog_normalization_params()
-    train_gen_wrapper.compute_emg_normalization_params()
-    valid_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
-    valid_gen_wrapper.set_eog_normalization_params(train_gen_wrapper.eog_meanX, train_gen_wrapper.eog_stdX)
-    valid_gen_wrapper.set_emg_normalization_params(train_gen_wrapper.emg_meanX, train_gen_wrapper.emg_stdX)
+
+    # CASE 1: Standardizing with training values
+    # train_gen_wrapper.compute_eeg_normalization_params()
+    # train_gen_wrapper.compute_eog_normalization_params()
+    # train_gen_wrapper.compute_emg_normalization_params()
+    # valid_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
+    # valid_gen_wrapper.set_eog_normalization_params(train_gen_wrapper.eog_meanX, train_gen_wrapper.eog_stdX)
+    # valid_gen_wrapper.set_emg_normalization_params(train_gen_wrapper.emg_meanX, train_gen_wrapper.emg_stdX)
+
+    # CASE 2: Standardizing each signal on its own
+    train_gen_wrapper.compute_eeg_normalization_params_by_signal()
+    train_gen_wrapper.compute_eog_normalization_params_by_signal()
+    train_gen_wrapper.compute_emg_normalization_params_by_signal()
+    valid_gen_wrapper.compute_eeg_normalization_params_by_signal()
+    valid_gen_wrapper.compute_eog_normalization_params_by_signal()
+    valid_gen_wrapper.compute_emg_normalization_params_by_signal()
+
     nchannel = 3
 
 # as there is only one fold, there is only one partition consisting all subjects,

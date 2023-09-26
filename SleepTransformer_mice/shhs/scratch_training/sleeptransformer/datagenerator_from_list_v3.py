@@ -105,7 +105,22 @@ class DataGenerator3:
         X2 = (X2 - meanX2) / stdX2
         self.X2 = np.reshape(X2, (self.data_size, self.data_shape_2[0], self.data_shape_2[1]))
 
-        
+    def normalize_by_signal(self, meanX2, stdX2):
+        # data normalization for time-frequency input here
+        count = 0
+        for i in range(len(self.list_of_files)):
+            X2 = self.X2[count: count + self.file_sizes[i]]
+            meanX2_i = meanX2[self.list_of_files[i]]
+            stdX2_i = stdX2[self.list_of_files[i]]
+
+            X2 = np.reshape(X2,(self.file_sizes[i]*self.data_shape_2[0], self.data_shape_2[1]))
+            X2 = (X2 - meanX2_i) / stdX2_i
+            X2 = np.reshape(X2, (self.file_sizes[i], self.data_shape_2[0], self.data_shape_2[1]))
+            self.X2[count: count + self.file_sizes[i]] = X2
+
+            count += self.file_sizes[i]
+
+
     def shuffle_data(self):
         """
         Random shuffle the data points indexes
