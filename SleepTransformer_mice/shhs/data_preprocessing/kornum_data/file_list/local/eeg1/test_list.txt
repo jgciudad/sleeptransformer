@@ -1,0 +1,11 @@
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0011_eeg1.mat	3602
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0014_eeg1.mat	3601
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0019_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0022_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0028_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0035_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0039_eeg1.mat	7302
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0043_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0047_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0050_eeg1.mat	21601
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/n0051_eeg1.mat	21600
