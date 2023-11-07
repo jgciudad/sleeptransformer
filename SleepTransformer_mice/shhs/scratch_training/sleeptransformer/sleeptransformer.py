@@ -67,8 +67,11 @@ class SleepTransformer(object):
 
         # calculate sequence cross-entropy output loss
         with tf.name_scope("output-loss"):
+            print(self.input_y.get_shape())
             self.output_loss = tf.nn.softmax_cross_entropy_with_logits(labels=self.input_y, logits=score)
+            print(self.output_loss.get_shape())
             self.output_loss = tf.reduce_sum(self.output_loss, axis=[0])
+            print(self.output_loss.get_shape())
             self.output_loss /= self.config.epoch_seq_len # average over sequence length
 
             # add on regularization

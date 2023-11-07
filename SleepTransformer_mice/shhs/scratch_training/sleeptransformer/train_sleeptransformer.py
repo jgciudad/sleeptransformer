@@ -30,24 +30,24 @@ tf.app.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft dev
 tf.app.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
 
 # My Parameters
-tf.app.flags.DEFINE_string("eeg_train_data", "../train_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eeg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eeg_test_data", "../test_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_train_data", "../train_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_test_data", "../test_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_train_data", "../train_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_test_data", "../test_data.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eeg_train_data", "../../data_preprocessing/kornum_data/file_list/local/eeg1/train_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eeg_eval_data", "../../data_preprocessing/kornum_data/file_list/local/eeg1/eval_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eeg_test_data", "../../data_preprocessing/kornum_data/file_list/local/eeg1/test_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_train_data", "../../data_preprocessing/kornum_data/file_list/local/eeg2/train_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_eval_data", "../../data_preprocessing/kornum_data/file_list/local/eeg2/eval_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_test_data", "../../data_preprocessing/kornum_data/file_list/local/eeg2/test_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_train_data", "../../data_preprocessing/kornum_data/file_list/local/emg/train_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_eval_data", "../../data_preprocessing/kornum_data/file_list/local/emg/eval_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_test_data", "../../data_preprocessing/kornum_data/file_list/local/emg/test_list.txt", "Point to directory of input data")
 tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
 tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
 tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
 tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
 tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
 
-tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
+tf.app.flags.DEFINE_integer("seq_len", 21, "Sequence length (default: 10)")
 
-tf.app.flags.DEFINE_integer("num_blocks", 0, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
+tf.app.flags.DEFINE_integer("num_blocks", 4, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
 tf.app.flags.DEFINE_integer("frm_num_blocks", 1, "Number of transformer block (default: 0)")
 tf.app.flags.DEFINE_integer("seq_num_blocks", 1, "Number of transformer block (default: 0)")
 tf.app.flags.DEFINE_integer("training_epoch", 10, "Number of training epochs (default: 10)")
@@ -59,6 +59,41 @@ tf.app.flags.DEFINE_float("fc_dropout", 0.1, "Dropout keep probability (default:
 
 # flag for early stopping
 tf.app.flags.DEFINE_boolean("early_stopping", False, "whether to apply early stopping (default: False)")
+
+# # Misc Parameters
+# tf.app.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device placement")
+# tf.app.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
+
+# # My Parameters
+# tf.app.flags.DEFINE_string("eeg_train_data", "../train_data.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eeg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eeg_test_data", "../test_data.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eog_train_data", "../train_data.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eog_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eog_test_data", "../test_data.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("emg_train_data", "../train_data.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("emg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("emg_test_data", "../test_data.mat", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
+# tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
+# tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
+# tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
+# tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
+
+# tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
+
+# tf.app.flags.DEFINE_integer("num_blocks", 0, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
+# tf.app.flags.DEFINE_integer("frm_num_blocks", 1, "Number of transformer block (default: 0)")
+# tf.app.flags.DEFINE_integer("seq_num_blocks", 1, "Number of transformer block (default: 0)")
+# tf.app.flags.DEFINE_integer("training_epoch", 10, "Number of training epochs (default: 10)")
+# tf.app.flags.DEFINE_float("frm_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+# tf.app.flags.DEFINE_float("frm_attention_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+# tf.app.flags.DEFINE_float("seq_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+# tf.app.flags.DEFINE_float("seq_attention_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+# tf.app.flags.DEFINE_float("fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+
+# # flag for early stopping
+# tf.app.flags.DEFINE_boolean("early_stopping", False, "whether to apply early stopping (default: False)")
 
 FLAGS = tf.app.flags.FLAGS
 print("\nParameters:")

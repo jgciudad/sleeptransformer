@@ -5,13 +5,13 @@ function collection = aggregate_sleeptransformer_local(nchan)
     Nfold = 1;
     yh = cell(Nfold,1);
     yt = cell(Nfold,1);
-    mat_path = 'C:\Users\javig\Documents\THESIS_DATA\SleepTransformer_mice\data_preprocessing\kornum_data\mat\';
+    mat_path = '/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/';
     listing = dir([mat_path, '*_eeg1.mat']);
-    load("C:\Users\javig\Documents\Code\HUMMUSS\SleepTransformer_mice\shhs\data_preprocessing\kornum_data\data_split_eval.mat");
+    load("/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/Code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/data_split_eval.mat");
     
     acc_novote = [];
     
-    seq_len = 101;
+    seq_len = 61;
     for fold = 1 : Nfold
         fold
         %test_s = test_sub{fold};
@@ -26,7 +26,7 @@ function collection = aggregate_sleeptransformer_local(nchan)
         end
         
 %     if(seq_len < 100)
-        load("C:\Users\javig\Documents\Drive\DTU\MASTER_THESIS\PAPER\models\seq_len\seq_len_101_batch_32\test_ret.mat");
+        load("/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/PhD/HUMMUSS_paper/outputs/n_heads/Ne_1_Ns_2/test_ret.mat");
 % 	else
 % 	    load(['./intepretable_sleep/sleeptransformer_simple_longseq/scratch_training_',num2str(nchan),'chan/n',num2str(fold),'/test_ret.mat']);
 % 	end
