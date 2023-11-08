@@ -22,32 +22,29 @@ from tensorflow.python import pywrap_tensorflow
 #from modules import append_cls
 import time
 
-# Parameters
-# ==================================================
-
 # Misc Parameters
 tf.app.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device placement")
 tf.app.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
 
 # My Parameters
-tf.app.flags.DEFINE_string("eeg_train_data", "../../data_preprocessing/kornum_data/file_list/local/eeg1/train_list.txt", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eeg_eval_data", "../../data_preprocessing/kornum_data/file_list/local/eeg1/eval_list.txt", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eeg_test_data", "../../data_preprocessing/kornum_data/file_list/local/eeg1/test_list.txt", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_train_data", "../../data_preprocessing/kornum_data/file_list/local/eeg2/train_list.txt", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_eval_data", "../../data_preprocessing/kornum_data/file_list/local/eeg2/eval_list.txt", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_test_data", "../../data_preprocessing/kornum_data/file_list/local/eeg2/test_list.txt", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_train_data", "../../data_preprocessing/kornum_data/file_list/local/emg/train_list.txt", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_eval_data", "../../data_preprocessing/kornum_data/file_list/local/emg/eval_list.txt", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_test_data", "../../data_preprocessing/kornum_data/file_list/local/emg/test_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eeg_train_data", "../train_data.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eeg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eeg_test_data", "../test_data.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_train_data", "../train_data.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_test_data", "../test_data.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_train_data", "../train_data.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_test_data", "../test_data.mat", "Point to directory of input data")
 tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
 tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
 tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
 tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
 tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
 
-tf.app.flags.DEFINE_integer("seq_len", 21, "Sequence length (default: 10)")
+tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
 
-tf.app.flags.DEFINE_integer("num_blocks", 4, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
+tf.app.flags.DEFINE_integer("num_blocks", 0, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
 tf.app.flags.DEFINE_integer("frm_num_blocks", 1, "Number of transformer block (default: 0)")
 tf.app.flags.DEFINE_integer("seq_num_blocks", 1, "Number of transformer block (default: 0)")
 tf.app.flags.DEFINE_integer("training_epoch", 10, "Number of training epochs (default: 10)")
@@ -59,41 +56,6 @@ tf.app.flags.DEFINE_float("fc_dropout", 0.1, "Dropout keep probability (default:
 
 # flag for early stopping
 tf.app.flags.DEFINE_boolean("early_stopping", False, "whether to apply early stopping (default: False)")
-
-# # Misc Parameters
-# tf.app.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device placement")
-# tf.app.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
-
-# # My Parameters
-# tf.app.flags.DEFINE_string("eeg_train_data", "../train_data.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("eeg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("eeg_test_data", "../test_data.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("eog_train_data", "../train_data.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("eog_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("eog_test_data", "../test_data.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("emg_train_data", "../train_data.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("emg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("emg_test_data", "../test_data.mat", "Point to directory of input data")
-# tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
-# tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
-# tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
-# tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
-# tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
-
-# tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
-
-# tf.app.flags.DEFINE_integer("num_blocks", 0, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
-# tf.app.flags.DEFINE_integer("frm_num_blocks", 1, "Number of transformer block (default: 0)")
-# tf.app.flags.DEFINE_integer("seq_num_blocks", 1, "Number of transformer block (default: 0)")
-# tf.app.flags.DEFINE_integer("training_epoch", 10, "Number of training epochs (default: 10)")
-# tf.app.flags.DEFINE_float("frm_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
-# tf.app.flags.DEFINE_float("frm_attention_dropout", 0.1, "Dropout keep probability (default: 0.1)")
-# tf.app.flags.DEFINE_float("seq_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
-# tf.app.flags.DEFINE_float("seq_attention_dropout", 0.1, "Dropout keep probability (default: 0.1)")
-# tf.app.flags.DEFINE_float("fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
-
-# # flag for early stopping
-# tf.app.flags.DEFINE_boolean("early_stopping", False, "whether to apply early stopping (default: False)")
 
 FLAGS = tf.app.flags.FLAGS
 print("\nParameters:")
@@ -168,8 +130,8 @@ if (not eog_active and not emg_active):
                                              seq_len = config.epoch_seq_len,
                                              nclasses = config.nclass,
                                              shuffle=False)
-    train_gen_wrapper.compute_eeg_normalization_params()
-    valid_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
+    train_gen_wrapper.compute_eeg_normalization_params_by_signal()
+    valid_gen_wrapper.compute_eeg_normalization_params_by_signal()
     nchannel = 1
 
 elif(eog_active and not emg_active):
@@ -306,6 +268,62 @@ with tf.Graph().as_default():
             _, step, output_loss, total_loss, accuracy = sess.run(
                [train_op, global_step, net.output_loss, net.loss, net.accuracy],
                feed_dict)
+
+            # arts = np.where(np.argmax(y_batch, 2) == 3)
+            #
+            # scores_replication = tf.nn.softmax(scores)
+            # cce = tf.keras.losses.CategoricalCrossentropy(reduction='none')
+            # ol2_replication = cce(y_true=y_batch.reshape([672, 4]), y_pred=tf.reshape(scores_replication, [
+            #     scores_replication.shape[0] * scores_replication.shape[1], scores_replication.shape[2]]))
+            # ol1_replication = tf.reduce_sum(ol2_replication, axis=[0]).eval()
+            # ol_replication = ol1_replication / 21
+
+            # if arts[0].size != 0:
+            #     masked_scores = scores
+            #     masked_scores = tf.nn.softmax(masked_scores)
+            #     masked_scores = masked_scores.eval()
+            #     for i in range(arts[0].size):
+            #         masked_scores[arts[0][i], arts[1][i], :] = np.array([0, 0, 0, 1])
+            #     masked_ol2 = cce(y_true=y_batch.reshape([672,4]), y_pred=masked_scores.reshape((masked_scores.shape[0]*masked_scores.shape[1], masked_scores.shape[2])))
+            #     masked_ol1 = tf.reduce_sum(masked_ol2, axis=[0]).eval()
+            #     masked_ol = masked_ol1/21
+            #
+            #     filtered_ol2 = list(ol2_replication.eval())
+            #     for i in range(arts[0].size):
+            #         filtered_ol2[arts[0][i]*21 + arts[1][i]] = 0
+            #     filtered_ol1 = np.sum(filtered_ol2)
+            #     filtered_ol = filtered_ol1/21
+
+            # y_batch_tf = tf.convert_to_tensor(y_batch)
+            # scores_tf = tf.convert_to_tensor(scores)
+
+            # scores_replication_tf = tf.nn.softmax(scores_tf)
+            # ol2_replication_tf = cce(y_true=tf.reshape(y_batch_tf, [672,4]), y_pred=tf.reshape(scores_replication, [scores_replication.shape[0]*scores_replication.shape[1], scores_replication.shape[2]]))
+            # ol1_replication_tf = tf.reduce_sum(ol2_replication_tf, axis=[0])
+            # ol_replication_tf = ol1_replication_tf/21
+            # ol_replication_tf = ol_replication_tf.eval()
+
+            # scores_replication_tf = tf.nn.softmax(scores_tf)
+            # ol2_replication_tf = cce(y_true=y_batch_tf, y_pred=scores_replication)
+            # ol1_replication_tf = tf.reduce_sum(ol2_replication_tf)
+            # ol_replication_tf = ol1_replication_tf/21
+            # ol_replication_tf = ol_replication_tf.eval()
+
+            # a = tf.math.argmax(y_batch_tf, -1)
+            # b = tf.not_equal(a, 3)
+            # b = tf.where(b, tf.ones(b.shape), tf.zeros(b.shape))
+            # masked_ol2_tf = tf.multiply(ol2_replication_tf, b)
+            # masked_ol1_tf = tf.reduce_sum(masked_ol2_tf)
+            # masked_ol_tf = masked_ol1_tf/21
+            # masked_ol_tf = masked_ol_tf.eval()
+
+            # print('------------------')
+            # if arts[0].size == 0:
+            #     print('NO ARTIFACTS')
+            # print(masked_loss)
+            # print(masked_ol_tf)
+            # print(output_loss)
+
             return step, output_loss, total_loss, accuracy
 
 

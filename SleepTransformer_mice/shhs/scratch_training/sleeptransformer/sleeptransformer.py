@@ -29,13 +29,13 @@ class SleepTransformer(object):
                                                     attention_dropout_rate=self.config.frm_attention_dropout,
                                                     smoothing=self.config.frm_smoothing)
             frm_trans_out = frm_trans_encoder.encode(frm_trans_X, training=self.istraining)
-            print(frm_trans_out.get_shape())
+            # print(frm_trans_out.get_shape())
             #[-1, frame_seq_len+1, d_model] [-1, 29, 128*3]
 
 
         with tf.variable_scope("frame_attention_layer"):
             self.attention_out, self.attention_weight = attention(frm_trans_out, self.config.frame_attention_size)
-            print(self.attention_out.get_shape())
+            # print(self.attention_out.get_shape())
             # attention_output1 of shape (batchsize*epoch_step, nhidden1*2)
 
         # unfold the data for sequence processing
@@ -50,7 +50,7 @@ class SleepTransformer(object):
                                                     attention_dropout_rate=self.config.seq_attention_dropout,
                                                     smoothing=self.config.seq_smoothing)
             seq_trans_out = seq_trans_encoder.encode(seq_trans_X, training=self.istraining)
-            print(seq_trans_out.get_shape())
+            # print(seq_trans_out.get_shape())
 
         self.scores = []
         self.predictions = []
@@ -67,12 +67,25 @@ class SleepTransformer(object):
 
         # calculate sequence cross-entropy output loss
         with tf.name_scope("output-loss"):
-            print(self.input_y.get_shape())
-            self.output_loss = tf.nn.softmax_cross_entropy_with_logits(labels=self.input_y, logits=score)
-            print(self.output_loss.get_shape())
-            self.output_loss = tf.reduce_sum(self.output_loss, axis=[0])
-            print(self.output_loss.get_shape())
-            self.output_loss /= self.config.epoch_seq_len # average over sequence length
+            # print('holaaaaaaaa')
+            # print(self.input_y.get_shape())
+            # print(score.get_shape())
+            # self.output_loss2 = tf.nn.softmax_cross_entropy_with_logits(labels=self.input_y, logits=score)
+            # print(self.output_loss2.get_shape())
+            # self.output_loss1 = tf.reduce_sum(self.output_loss2, axis=[0])
+            # print(self.output_loss1.get_shape())
+            # self.output_loss = self.output_loss1 / self.config.epoch_seq_len # average over sequence length
+
+            input_y_categorical = tf.math.argmax(self.input_y, -1) # dummy labels to numbers
+            artifact_mask = tf.not_equal(input_y_categorical, 3) # artifact mask (boolean)
+            artifact_mask = tf.where(artifact_mask, tf.ones(tf.shape(artifact_mask)), tf.zeros(tf.shape(artifact_mask))) # boolean artifact mask to binary
+
+            probability_scores = tf.nn.softmax(self.scores)
+            cce = tf.keras.losses.CategoricalCrossentropy(reduction='none')
+            original_cce = cce(y_true=input_y_categorical, y_pred=probability_scores)
+            masked_cce = tf.multiply(original_cce, artifact_mask)
+            masked_cce = tf.reduce_sum(masked_cce)
+            self.output_loss = masked_cce / self.config.epoch_seq_len
 
             # add on regularization
         with tf.name_scope("l2_loss"):
