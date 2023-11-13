@@ -46,6 +46,7 @@ tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
 tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
 tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
 tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
+tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
 
 tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
 
@@ -84,11 +85,17 @@ print("")
 out_path = os.path.abspath(os.path.join(os.path.curdir,FLAGS.out_dir))
 # path where checkpoint models are stored
 checkpoint_path = os.path.abspath(os.path.join(out_path,FLAGS.checkpoint_dir))
-human_model_checkpoint = FLAGS.original_human_model;
+human_model_checkpoint = FLAGS.original_human_model
 if not os.path.isdir(os.path.abspath(out_path)): os.makedirs(os.path.abspath(out_path))
 if not os.path.isdir(os.path.abspath(checkpoint_path)): os.makedirs(os.path.abspath(checkpoint_path))
 
+with open(os.path.join(out_path,'training_settings.txt'), 'w') as f:
+    for attr in sorted(flags_dict):  # python3
+        f.write("{}={}".format(attr.upper(), flags_dict[attr]))
+        f.write('\n')
+
 config = Config()
+config.batch_size = FLAGS.batch_size
 config.nclass = FLAGS.nclass
 config.frame_seq_len = FLAGS.frame_seq_len
 config.frm_maxlen = FLAGS.frame_seq_len
@@ -130,8 +137,8 @@ if (not eog_active and not emg_active):
                                              seq_len = config.epoch_seq_len,
                                              nclasses = config.nclass,
                                              shuffle=False)
-    train_gen_wrapper.compute_eeg_normalization_params()
-    valid_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
+    train_gen_wrapper.compute_eeg_normalization_params_by_signal()
+    valid_gen_wrapper.compute_eeg_normalization_params_by_signal()
     nchannel = 1
 
 elif(eog_active and not emg_active):
@@ -192,12 +199,23 @@ elif(eog_active and emg_active):
     #                                         data_shape_2=[config.frame_seq_len, config.ndim],
     #                                         seq_len = config.epoch_seq_len,
     #                                         shuffle=False)
-    train_gen_wrapper.compute_eeg_normalization_params()
-    train_gen_wrapper.compute_eog_normalization_params()
-    train_gen_wrapper.compute_emg_normalization_params()
-    valid_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
-    valid_gen_wrapper.set_eog_normalization_params(train_gen_wrapper.eog_meanX, train_gen_wrapper.eog_stdX)
-    valid_gen_wrapper.set_emg_normalization_params(train_gen_wrapper.emg_meanX, train_gen_wrapper.emg_stdX)
+
+    # CASE 1: Standardizing with training values
+    # train_gen_wrapper.compute_eeg_normalization_params()
+    # train_gen_wrapper.compute_eog_normalization_params()
+    # train_gen_wrapper.compute_emg_normalization_params()
+    # valid_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
+    # valid_gen_wrapper.set_eog_normalization_params(train_gen_wrapper.eog_meanX, train_gen_wrapper.eog_stdX)
+    # valid_gen_wrapper.set_emg_normalization_params(train_gen_wrapper.emg_meanX, train_gen_wrapper.emg_stdX)
+
+    # CASE 2: Standardizing each signal on its own
+    train_gen_wrapper.compute_eeg_normalization_params_by_signal()
+    train_gen_wrapper.compute_eog_normalization_params_by_signal()
+    train_gen_wrapper.compute_emg_normalization_params_by_signal()
+    valid_gen_wrapper.compute_eeg_normalization_params_by_signal()
+    valid_gen_wrapper.compute_eog_normalization_params_by_signal()
+    valid_gen_wrapper.compute_emg_normalization_params_by_signal()
+
     nchannel = 3
 
 # as there is only one fold, there is only one partition consisting all subjects,
@@ -218,11 +236,11 @@ best_acc = 0.0
 early_stop_count = 0
 
 with tf.Graph().as_default():
-    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.475, allow_growth=False)
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.475, allow_growth=True)
     session_conf = tf.ConfigProto(
       allow_soft_placement=FLAGS.allow_soft_placement,
-      log_device_placement=FLAGS.log_device_placement,
-      gpu_options=gpu_options)
+      log_device_placement=FLAGS.log_device_placement)
+      # gpu_options=gpu_options)
     sess = tf.Session(config=session_conf)
     with sess.as_default():
         net = SleepTransformer(config=config)

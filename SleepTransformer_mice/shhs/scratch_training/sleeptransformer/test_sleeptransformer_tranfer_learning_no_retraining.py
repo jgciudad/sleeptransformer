@@ -8,7 +8,7 @@ from datetime import datetime
 import h5py
 import hdf5storage
 
-from sleeptransformer import SleepTransformer
+from sleeptransformer_transfer_learning import SleepTransformer_TL
 from config import Config
 
 from sklearn.metrics import f1_score
@@ -83,6 +83,7 @@ print("")
 out_path = os.path.abspath(os.path.join(os.path.curdir,FLAGS.out_dir))
 # path where checkpoint models are stored
 checkpoint_path = os.path.abspath(os.path.join(out_path,FLAGS.checkpoint_dir))
+human_model_checkpoint = FLAGS.original_human_model
 if not os.path.isdir(os.path.abspath(out_path)): os.makedirs(os.path.abspath(out_path))
 if not os.path.isdir(os.path.abspath(checkpoint_path)): os.makedirs(os.path.abspath(checkpoint_path))
 
@@ -132,7 +133,7 @@ if (not eog_active and not emg_active):
                                              #data_shape_1=[config.ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
-                                             nclasses = config.nclass,
+                                             nclasses = 4,
                                              shuffle=False)
     # train_gen_wrapper.compute_eeg_normalization_params_by_signal()
     test_gen_wrapper.compute_eeg_normalization_params_by_signal()
@@ -212,21 +213,14 @@ with tf.Graph().as_default():
       # gpu_options=gpu_options)
     sess = tf.Session(config=session_conf)
     with sess.as_default():
-        net = SleepTransformer(config=config)
+        net = SleepTransformer_TL(config=config)
 
         out_dir = os.path.abspath(os.path.join(os.path.curdir,FLAGS.out_dir))
         print("Writing to {}\n".format(out_dir))
 
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
-        with tf.control_dependencies(update_ops):
-            # Define Training procedure
-            global_step = tf.Variable(0, name="global_step", trainable=False)
-            optimizer = tf.train.AdamOptimizer(config.learning_rate)
-            grads_and_vars = optimizer.compute_gradients(net.loss)
-            train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step)
 
-        best_dir = os.path.join(checkpoint_path, "best_model_acc")
-
+        best_dir = os.path.join(human_model_checkpoint, "best_model_acc")
 
         variables = list()
         variables.extend(tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES))
@@ -256,18 +250,17 @@ with tf.Graph().as_default():
         print("Model loaded")
 
 
-        def dev_step(x_batch, y_batch):
+        def dev_step(x_batch):
             '''
             A single evaluation step
             '''
             feed_dict = {
                 net.input_x: x_batch,
-                net.input_y: y_batch,
                 net.istraining: 0
             }
-            output_loss, total_loss, yhat, score = sess.run(
-                   [net.output_loss, net.loss, net.predictions, net.scores], feed_dict)
-            return output_loss, total_loss, yhat, score
+            yhat, score = sess.run(
+                   [net.predictions, net.scores], feed_dict)
+            return yhat, score
 
         def evaluate(gen_wrapper):
 
@@ -284,30 +277,18 @@ with tf.Graph().as_default():
             for data_fold in range(config.num_fold_testing_data):
                 # load data of the current fold
                 gen_wrapper.next_fold()
-                yhat_, score_, output_loss_, total_loss_ = _evaluate(gen_wrapper.gen)
-
-                output_loss += output_loss_
-                total_loss += total_loss_
+                yhat_, score_ = _evaluate(gen_wrapper.gen)
 
                 yhat[count : count + len(gen_wrapper.gen.data_index)] = yhat_
                 score[count : count + len(gen_wrapper.gen.data_index)] = score_
 
-                # groundtruth
-                for n in range(config.epoch_seq_len):
-                    y[count : count + len(gen_wrapper.gen.data_index), n] =\
-                        gen_wrapper.gen.label[gen_wrapper.gen.data_index - (config.epoch_seq_len - 1) + n]
                 count += len(gen_wrapper.gen.data_index)
 
-            test_acc = np.zeros([config.epoch_seq_len])
-            for n in range(config.epoch_seq_len):
-                test_acc[n] = accuracy_score(yhat[:,n], y[:,n]) # excluding the indexes of the recordings
 
-            return test_acc, yhat, score, output_loss, total_loss
+            return yhat, score
 
         def _evaluate(gen):
             # Validate the model on the entire data in gen
-            output_loss =0
-            total_loss = 0
 
             factor = 10
             yhat = np.zeros([len(gen.data_index), config.epoch_seq_len])
@@ -317,36 +298,29 @@ with tf.Graph().as_default():
             test_step = 1
             while test_step < num_batch_per_epoch:
                 x_batch, y_batch, label_batch_ = gen.next_batch(factor*config.batch_size)
-                output_loss_, total_loss_, yhat_, score_ = dev_step(x_batch, y_batch)
-                output_loss += output_loss_
-                total_loss += total_loss_
+                yhat_, score_ = dev_step(x_batch)
                 yhat[(test_step - 1) * factor * config.batch_size: test_step * factor * config.batch_size] = yhat_
                 score[(test_step - 1) * factor * config.batch_size: test_step * factor * config.batch_size] = score_
                 test_step += 1
             if(gen.pointer < len(gen.data_index)):
                 actual_len, x_batch, y_batch, label_batch_ = gen.rest_batch(factor*config.batch_size)
-                output_loss_, total_loss_, yhat_, score_ = dev_step(x_batch, y_batch)
+                yhat_, score_ = dev_step(x_batch)
                 yhat[(test_step - 1) * factor * config.batch_size: len(gen.data_index)] = yhat_
                 score[(test_step - 1) * factor * config.batch_size: len(gen.data_index)] = score_
-                output_loss += output_loss_
-                total_loss += total_loss_
             yhat = yhat + 1 # make label starting from 1 rather than 0
 
-            return yhat, score, output_loss, total_loss
+            return yhat, score
 
         # evaluation on test data
         start_time = time.time()
-        test_acc, test_yhat, test_score, test_output_loss, test_total_loss = evaluate(gen_wrapper=test_gen_wrapper)
+        test_yhat, test_score = evaluate(gen_wrapper=test_gen_wrapper)
         end_time = time.time()
         with open(os.path.join(out_dir, "test_time.txt"), "a") as text_file:
             text_file.write("{:g}\n".format((end_time - start_time)))
         
         hdf5storage.savemat(os.path.join(out_path, "test_ret.mat"),
-                {'yhat': test_yhat, 
-                    'acc': test_acc, 
-                    'score': test_score, 
-                    'output_loss': test_output_loss, 
-                    'total_loss': test_total_loss}, 
+                {'yhat': test_yhat,
+                 'score': test_score},
                 format='7.3')
 
         test_gen_wrapper.gen.reset_pointer()
