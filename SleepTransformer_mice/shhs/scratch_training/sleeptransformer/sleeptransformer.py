@@ -69,7 +69,6 @@ class SleepTransformer(object):
         with tf.name_scope("output-loss"):
 
             if config.loss_type == 'normal_ce':
-                print('heyoo')
                 input_y_categorical = tf.math.argmax(self.input_y, -1) # dummy labels to numbers
                 input_y_categorical = tf.reshape(input_y_categorical, [-1])
                 scores = tf.reshape(self.scores, [-1, self.config.nclass_model])
@@ -93,10 +92,9 @@ class SleepTransformer(object):
 
 
                 cce = tf.reduce_sum(cce)
-                self.output_loss = cce / self.config.epoch_seq_len / n_elements_in_batch # average over sequence length and (not-artifacts) elements in batch
+                self.output_loss = cce / n_elements_in_batch # average over sequence length and (not-artifacts) elements in batch
 
             elif config.loss_type == 'weighted_ce':
-                print('heyo2222')
                 input_y_categorical = tf.math.argmax(self.input_y, -1) # dummy labels to numbers
                 input_y_categorical = tf.reshape(input_y_categorical, [-1])
                 scores = tf.reshape(self.scores, [-1, self.config.nclass_model])
@@ -148,7 +146,7 @@ class SleepTransformer(object):
                     cce  = tf.cond(tf.reduce_sum(labels_class_i_binary) > 0, lambda: cond_function_true_wce(cce, n_elements_in_batch, n_classes_in_batch, labels_class_i_binary, labels_class_i_bool), lambda: cond_function_false_wce(cce))
 
                 cce = tf.reduce_sum(cce)
-                self.output_loss = cce / self.config.epoch_seq_len / n_elements_in_batch # average over sequence length and elements in batch
+                self.output_loss = cce / n_elements_in_batch # average over sequence length and elements in batch
 
 
             # add on regularization
