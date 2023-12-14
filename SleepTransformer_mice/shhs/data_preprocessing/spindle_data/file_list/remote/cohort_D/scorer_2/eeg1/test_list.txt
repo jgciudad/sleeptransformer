@@ -1,0 +1,6 @@
+/scratch/s202283/data/SleepTransformer_mice/data_preprocessing/spindle_data/cohort_D/scorer_2/n0002_eeg1.mat	21600
+/scratch/s202283/data/SleepTransformer_mice/data_preprocessing/spindle_data/cohort_D/scorer_2/n0006_eeg1.mat	21600
+/scratch/s202283/data/SleepTransformer_mice/data_preprocessing/spindle_data/cohort_D/scorer_2/n0005_eeg1.mat	21600
+/scratch/s202283/data/SleepTransformer_mice/data_preprocessing/spindle_data/cohort_D/scorer_2/n0003_eeg1.mat	21600
+/scratch/s202283/data/SleepTransformer_mice/data_preprocessing/spindle_data/cohort_D/scorer_2/n0004_eeg1.mat	21600
+/scratch/s202283/data/SleepTransformer_mice/data_preprocessing/spindle_data/cohort_D/scorer_2/n0001_eeg1.mat	21600

@@ -1,0 +1,6 @@
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/spindle_data/cohort_D/scorer_1/n0002_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/spindle_data/cohort_D/scorer_1/n0006_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/spindle_data/cohort_D/scorer_1/n0005_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/spindle_data/cohort_D/scorer_1/n0003_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/spindle_data/cohort_D/scorer_1/n0004_eeg1.mat	21600
+/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/spindle_data/cohort_D/scorer_1/n0001_eeg1.mat	21600
