@@ -11,8 +11,8 @@ import hdf5storage
 from sleeptransformer import SleepTransformer
 from config import Config
 
-from sklearn.metrics import f1_score
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score, balanced_accuracy_score
+from sklearn.metrics import accuracy_score, recall_score
 from sklearn.metrics import cohen_kappa_score
 
 from datagenerator_wrapper import DataGeneratorWrapper
@@ -24,6 +24,51 @@ import time
 from tensorflow.python import pywrap_tensorflow
 
 import time
+
+# # Parameters
+# # ==================================================
+
+# # Misc Parameters
+# tf.app.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device placement")
+# tf.app.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
+
+# # My Parameters
+# tf.app.flags.DEFINE_string("eeg_train_data", "", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eeg_eval_data", "", "Point to directory of input data")
+# # tf.app.flags.DEFINE_string("eeg_test_data", "./code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/spindle_data/file_list/remote/scorer_1/eeg1/test_list.txt", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eeg_test_data", "./code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/file_list/remote/eeg1/test_list.txt", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eog_train_data", "", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eog_eval_data", "", "Point to directory of input data")
+# # tf.app.flags.DEFINE_string("eog_test_data", "./code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/spindle_data/file_list/remote/scorer_1/eeg2/test_list.txt", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("eog_test_data", "./code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/file_list/remote/eeg2/test_list.txt", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("emg_train_data", "", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("emg_eval_data", "", "Point to directory of input data")
+# # tf.app.flags.DEFINE_string("emg_test_data", "./code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/spindle_data/file_list/remote/scorer_1/emg/test_list.txt", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("emg_test_data", "./code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/file_list/remote/emg/test_list.txt", "Point to directory of input data")
+# tf.app.flags.DEFINE_string("out_dir", "./outputs/wce_test/", "Point to output directory")
+# tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
+# tf.app.flags.DEFINE_integer("nclass_data", 4, "Number of classes in the data (whether artifacts are discarded or not is controlled in nclass_model)")
+# tf.app.flags.DEFINE_integer("nclass_model", 3, "Number of classes for sleep stage prediction (i.e. in mice, if artifacts are discarded, then nclass_model=3)")
+# tf.app.flags.DEFINE_integer("artifacts_label", 3, "Categorical label of the artifact class in the data")
+# tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
+# tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
+
+# #tf.app.flags.DEFINE_float("dropout_keep_prob_rnn", 0.75, "Dropout keep probability (default: 0.75)")
+# tf.app.flags.DEFINE_integer("seq_len", 21, "Sequence length (default: 10)")
+
+# tf.app.flags.DEFINE_integer("num_blocks", 4, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
+# tf.app.flags.DEFINE_integer("frm_num_blocks", 1, "Number of transformer block (default: 0)")
+# tf.app.flags.DEFINE_integer("seq_num_blocks", 1, "Number of transformer block (default: 0)")
+# tf.app.flags.DEFINE_float("frm_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+# tf.app.flags.DEFINE_float("frm_attention_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+# tf.app.flags.DEFINE_float("seq_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+# tf.app.flags.DEFINE_float("seq_attention_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+# tf.app.flags.DEFINE_float("fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
+
+# # flag for early stopping
+# tf.app.flags.DEFINE_boolean("early_stopping", False, "whether to apply early stopping (default: False)")
+# tf.app.flags.DEFINE_string("best_model_criteria", 'balanced_accuracy', "whether to save the model with best 'balanced_accuracy' or 'accuracy' (default: accuracy)")
+# tf.app.flags.DEFINE_string("loss_type", 'weighted_ce', "whether to use 'weighted_ce' or 'normal_ce' (default: accuracy)")
 
 # Parameters
 # ==================================================
@@ -44,7 +89,9 @@ tf.app.flags.DEFINE_string("emg_eval_data", "../data/eval_data_1.mat", "Point to
 tf.app.flags.DEFINE_string("emg_test_data", "../test_data.mat", "Point to directory of input data")
 tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
 tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
-tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
+tf.app.flags.DEFINE_integer("nclass_data", 4, "Number of classes in the data (whether artifacts are discarded or not is controlled in nclass_model)")
+tf.app.flags.DEFINE_integer("nclass_model", 3, "Number of classes for sleep stage prediction (i.e. in mice, if artifacts are discarded, then nclass_model=3)")
+tf.app.flags.DEFINE_integer("artifacts_label", 3, "Categorical label of the artifact class in the data")
 tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
 tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
 
@@ -60,6 +107,10 @@ tf.app.flags.DEFINE_float("seq_fc_dropout", 0.1, "Dropout keep probability (defa
 tf.app.flags.DEFINE_float("seq_attention_dropout", 0.1, "Dropout keep probability (default: 0.1)")
 tf.app.flags.DEFINE_float("fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
 
+# flag for early stopping
+tf.app.flags.DEFINE_boolean("early_stopping", False, "whether to apply early stopping (default: False)")
+tf.app.flags.DEFINE_string("best_model_criteria", 'balanced_accuracy', "whether to save the model with best 'balanced_accuracy' or 'accuracy' (default: accuracy)")
+tf.app.flags.DEFINE_string("loss_type", 'weighted_ce', "whether to use 'weighted_ce' or 'normal_ce' (default: accuracy)")
 
 FLAGS = tf.app.flags.FLAGS
 print("\nParameters:")
@@ -92,13 +143,18 @@ with open(os.path.join(out_path,'test_settings.txt'), 'w') as f:
         f.write('\n')
 
 config = Config()
-config.nclass = FLAGS.nclass
 config.batch_size = FLAGS.batch_size
+# config.learning_rate = 1e-4 / FLAGS.batch_size # scaling by btach size because now I'm normalizing the loss by the number of elements in batch
+config.nclass_data = FLAGS.nclass_data
+config.nclass_model = FLAGS.nclass_model
+config.artifacts_label = FLAGS.artifacts_label
 config.frame_seq_len = FLAGS.frame_seq_len
 config.frm_maxlen = FLAGS.frame_seq_len
 config.epoch_seq_len = FLAGS.seq_len
 config.seq_maxlen = FLAGS.seq_len
-config.epoch_step = FLAGS.seq_len
+config.best_model_criteria = FLAGS.best_model_criteria
+config.loss_type = FLAGS.loss_type
+config.l2_reg_lambda = config.l2_reg_lambda / FLAGS.batch_size # scaling by btach size because now I'm normalizing the loss by the number of elements in batch
 
 if (FLAGS.num_blocks > 0):
     config.frm_num_blocks = FLAGS.num_blocks
@@ -114,64 +170,37 @@ config.seq_attention_dropout = FLAGS.frm_fc_dropout  # 0.3 dropout
 config.fc_dropout = FLAGS.frm_fc_dropout
 
 
-eeg_active = ((FLAGS.eeg_train_data != "") and (FLAGS.eeg_test_data != ""))
-eog_active = ((FLAGS.eog_train_data != "") and (FLAGS.eog_test_data != ""))
-emg_active = ((FLAGS.emg_train_data != "") and (FLAGS.emg_test_data != ""))
+eeg_active = (FLAGS.eeg_test_data != "")
+eog_active = (FLAGS.eog_test_data != "")
+emg_active = (FLAGS.emg_test_data != "")
 
 if (not eog_active and not emg_active):
     print("eeg active")
-    # train_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_train_data),
-    #                                          num_fold=config.num_fold_training_data,
-    #                                          #data_shape_1=[config.ntime],
-    #                                          data_shape_2=[config.frame_seq_len, config.ndim],  # excluding 0th element
-    #                                          seq_len = config.epoch_seq_len,
-    #                                          nclasses = config.nclass,
-    #                                          shuffle=True)
     test_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_test_data),
                                              num_fold=config.num_fold_testing_data,
                                              #data_shape_1=[config.ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
-                                             nclasses = config.nclass,
+                                             nclasses = config.nclass_data,
                                              shuffle=False)
-    # train_gen_wrapper.compute_eeg_normalization_params_by_signal()
     test_gen_wrapper.compute_eeg_normalization_params_by_signal()
     nchannel = 1
 
 elif(eog_active and not emg_active):
     print("eeg and eog active")
-    train_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_train_data),
-                                             eog_filelist=os.path.abspath(FLAGS.eog_train_data),
-                                             num_fold=config.num_fold_training_data,
-                                             #data_shape_1=[config.deep_ntime],
-                                             data_shape_2=[config.frame_seq_len, config.ndim],
-                                             seq_len = config.epoch_seq_len,
-                                             nclasses = config.nclass,
-                                             shuffle=True)
     test_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_test_data),
                                                   eog_filelist=os.path.abspath(FLAGS.eog_test_data),
                                              num_fold=config.num_fold_testing_data,
                                              #data_shape_1=[config.deep_ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
-                                             nclasses = config.nclass,
+                                             nclasses = config.nclass_data,
                                              shuffle=False)
-    train_gen_wrapper.compute_eeg_normalization_params()
-    train_gen_wrapper.compute_eog_normalization_params()
-    test_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
-    test_gen_wrapper.set_eog_normalization_params(train_gen_wrapper.eog_meanX, train_gen_wrapper.eog_stdX)
+    test_gen_wrapper.compute_eeg_normalization_params_by_signal()
+    test_gen_wrapper.compute_eog_normalization_params_by_signal()
     nchannel = 2
 elif(eog_active and emg_active):
     print("eeg, eog, and emg active")
-    # train_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_train_data),
-    #                                          eog_filelist=os.path.abspath(FLAGS.eog_train_data),
-    #                                          emg_filelist=os.path.abspath(FLAGS.emg_train_data),
-    #                                          num_fold=config.num_fold_training_data,
-    #                                          #data_shape_1=[config.deep_ntime],
-    #                                          data_shape_2=[config.frame_seq_len, config.ndim],
-    #                                          seq_len = config.epoch_seq_len,
-    #                                          nclasses = config.nclass,
-    #                                          shuffle=True)
     test_gen_wrapper = DataGeneratorWrapper(eeg_filelist=os.path.abspath(FLAGS.eeg_test_data),
                                                   eog_filelist=os.path.abspath(FLAGS.eog_test_data),
                                                   emg_filelist=os.path.abspath(FLAGS.emg_test_data),
@@ -179,30 +208,16 @@ elif(eog_active and emg_active):
                                              #data_shape_1=[config.deep_ntime],
                                              data_shape_2=[config.frame_seq_len, config.ndim],
                                              seq_len = config.epoch_seq_len,
-                                             nclasses = config.nclass,
+                                             nclasses = config.nclass_data,
                                              shuffle=False)
-
-    # CASE 1: Standardizing with training values
-    # train_gen_wrapper.compute_eeg_normalization_params()
-    # train_gen_wrapper.compute_eog_normalization_params()
-    # train_gen_wrapper.compute_emg_normalization_params()
-    # test_gen_wrapper.set_eeg_normalization_params(train_gen_wrapper.eeg_meanX, train_gen_wrapper.eeg_stdX)
-    # test_gen_wrapper.set_eog_normalization_params(train_gen_wrapper.eog_meanX, train_gen_wrapper.eog_stdX)
-    # test_gen_wrapper.set_emg_normalization_params(train_gen_wrapper.emg_meanX, train_gen_wrapper.emg_stdX)
-
-    # CASE 2: Standardizing each signal on its own
     test_gen_wrapper.compute_eeg_normalization_params_by_signal()
     test_gen_wrapper.compute_eog_normalization_params_by_signal()
     test_gen_wrapper.compute_emg_normalization_params_by_signal()
-
     nchannel = 3
 
 config.nchannel = nchannel
 config.seq_d_model = config.ndim*config.nchannel
 config.frm_d_model = config.ndim*config.nchannel
-
-# do not need training data anymore
-# del train_gen_wrapper
 
 with tf.Graph().as_default():
     # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.475, allow_growth=False)
@@ -275,7 +290,7 @@ with tf.Graph().as_default():
             yhat = np.zeros([N, config.epoch_seq_len])
             y = np.zeros([N, config.epoch_seq_len])
 
-            score = np.zeros([N, config.epoch_seq_len, config.nclass])
+            score = np.zeros([N, config.epoch_seq_len, config.nclass_model])
 
             count = 0
             output_loss = 0
@@ -284,25 +299,27 @@ with tf.Graph().as_default():
             for data_fold in range(config.num_fold_testing_data):
                 # load data of the current fold
                 gen_wrapper.next_fold()
-                yhat_, score_, output_loss_, total_loss_ = _evaluate(gen_wrapper.gen)
+                # yhat_, score_, output_loss_, total_loss_ = _evaluate(gen_wrapper.gen)
+                score_ = _evaluate(gen_wrapper.gen)
 
-                output_loss += output_loss_
-                total_loss += total_loss_
+                # output_loss += output_loss_
+                # total_loss += total_loss_
 
-                yhat[count : count + len(gen_wrapper.gen.data_index)] = yhat_
+                # yhat[count : count + len(gen_wrapper.gen.data_index)] = yhat_
                 score[count : count + len(gen_wrapper.gen.data_index)] = score_
 
                 # groundtruth
-                for n in range(config.epoch_seq_len):
-                    y[count : count + len(gen_wrapper.gen.data_index), n] =\
-                        gen_wrapper.gen.label[gen_wrapper.gen.data_index - (config.epoch_seq_len - 1) + n]
+                # for n in range(config.epoch_seq_len):
+                #     y[count : count + len(gen_wrapper.gen.data_index), n] =\
+                #         gen_wrapper.gen.label[gen_wrapper.gen.data_index - (config.epoch_seq_len - 1) + n]
                 count += len(gen_wrapper.gen.data_index)
 
-            test_acc = np.zeros([config.epoch_seq_len])
-            for n in range(config.epoch_seq_len):
-                test_acc[n] = accuracy_score(yhat[:,n], y[:,n]) # excluding the indexes of the recordings
+            # test_acc = np.zeros([config.epoch_seq_len])
+            # for n in range(config.epoch_seq_len):
+            #     test_acc[n] = accuracy_score(yhat[:,n], y[:,n]) # excluding the indexes of the recordings
 
-            return test_acc, yhat, score, output_loss, total_loss
+            # return test_acc, yhat, score, output_loss, total_loss
+            return score
 
         def _evaluate(gen):
             # Validate the model on the entire data in gen
@@ -311,7 +328,7 @@ with tf.Graph().as_default():
 
             factor = 10
             yhat = np.zeros([len(gen.data_index), config.epoch_seq_len])
-            score = np.zeros([len(gen.data_index), config.epoch_seq_len, config.nclass])
+            score = np.zeros([len(gen.data_index), config.epoch_seq_len, config.nclass_model])
             # use 10x of minibatch size to speed up
             num_batch_per_epoch = np.floor(len(gen.data_index) / (factor*config.batch_size)).astype(np.uint32)
             test_step = 1
@@ -330,23 +347,21 @@ with tf.Graph().as_default():
                 score[(test_step - 1) * factor * config.batch_size: len(gen.data_index)] = score_
                 output_loss += output_loss_
                 total_loss += total_loss_
-            yhat = yhat + 1 # make label starting from 1 rather than 0
+            # yhat = yhat + 1 # make label starting from 1 rather than 0
 
-            return yhat, score, output_loss, total_loss
+            # return yhat, score, output_loss, total_loss
+            return score
 
         # evaluation on test data
         start_time = time.time()
-        test_acc, test_yhat, test_score, test_output_loss, test_total_loss = evaluate(gen_wrapper=test_gen_wrapper)
+        # test_acc, test_yhat, test_score, test_output_loss, test_total_loss = evaluate(gen_wrapper=test_gen_wrapper)
+        test_score = evaluate(gen_wrapper=test_gen_wrapper)
         end_time = time.time()
         with open(os.path.join(out_dir, "test_time.txt"), "a") as text_file:
             text_file.write("{:g}\n".format((end_time - start_time)))
         
         hdf5storage.savemat(os.path.join(out_path, "test_ret.mat"),
-                {'yhat': test_yhat, 
-                    'acc': test_acc, 
-                    'score': test_score, 
-                    'output_loss': test_output_loss, 
-                    'total_loss': test_total_loss}, 
+                {'score': test_score}, 
                 format='7.3')
 
         test_gen_wrapper.gen.reset_pointer()
