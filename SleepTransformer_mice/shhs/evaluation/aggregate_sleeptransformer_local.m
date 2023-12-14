@@ -1,17 +1,21 @@
 function collection = aggregate_sleeptransformer_local(nchan)
     
     filter_out_artifacts = 1;
+    nclass_model = 3;
     nchan=1;
     Nfold = 1;
     yh = cell(Nfold,1);
     yt = cell(Nfold,1);
-    mat_path = '/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/';
+    % mat_path = '/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/kornum_data/mat/';
+    mat_path = '/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SleepTransformer_mice/spindle_data/mat/scorer_1/';
+
     listing = dir([mat_path, '*_eeg1.mat']);
-    load("/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/Code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/data_split_eval.mat");
+    % load("/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/Code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/data_split_eval.mat");
+    load("/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/Code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/spindle_data/data_split_eval.mat");
     
-    acc_novote = [];
+    % acc_novote = [];
     
-    seq_len = 61;
+    seq_len = 21;
     for fold = 1 : Nfold
         fold
         %test_s = test_sub{fold};
@@ -26,13 +30,17 @@ function collection = aggregate_sleeptransformer_local(nchan)
         end
         
 %     if(seq_len < 100)
-        load("/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/PhD/HUMMUSS_paper/outputs/n_heads/Ne_1_Ns_2/test_ret.mat");
-% 	else
+        % load(join(['/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/PhD/HUMMUSS_paper/outputs/masked_loss/seq_len_', num2str(seq_len), '/kornumlab_evaluation/test_ret.mat']))
+        % load(join(['/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/PhD/HUMMUSS_paper/outputs/masked_loss/seq_len_', num2str(seq_len), '/brownlab_evaluation/test_ret.mat']));
+        % load('/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/PhD/HUMMUSS_paper/outputs/wce_test/test_ret.mat');
+        load('/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/PhD/HUMMUSS_paper/outputs/wce_test/brownlab/scorer_1/test_ret.mat');
+
+        % 	else
 % 	    load(['./intepretable_sleep/sleeptransformer_simple_longseq/scratch_training_',num2str(nchan),'chan/n',num2str(fold),'/test_ret.mat']);
 % 	end
         
         
-        acc_novote = [acc_novote; acc];
+        % acc_novote = [acc_novote; acc];
         
         score_ = cell(1,seq_len);
         for n = 1 : seq_len
@@ -51,7 +59,7 @@ function collection = aggregate_sleeptransformer_local(nchan)
                 N = size(score_i{n},1);
                 %valid_ind{n} = ones(N,1);
 
-                score_i{n} = [ones(seq_len-1,4); score{n}(start_pos:end_pos, :)];
+                score_i{n} = [ones(seq_len-1,nclass_model); score{n}(start_pos:end_pos, :)];
                 %valid_ind{n} = [zeros(seq_len-1,1); valid_ind{n}]; 
                 score_i{n} = circshift(score_i{n}, -(seq_len - n), 1);
                 %valid_ind{n} = circshift(valid_ind{n}, -(seq_len - n), 1);
@@ -87,7 +95,7 @@ function collection = aggregate_sleeptransformer_local(nchan)
         yt = yt(yt~=4); % filter out artifacts
     end
 
-    acc = sum(yh == yt)/numel(yt)
+    acc = sum(yh == yt)/numel(yt);
     C = confusionmat(yt, yh);
         
     [mysensitivity, myselectivity]  = calculate_sensitivity_selectivity(yt, yh); % THEY MADE A MISTAKE, THIS IS NOT SELECTIVITY, IS PRECISION!!! (is actually good, because is what I want)
@@ -96,7 +104,7 @@ function collection = aggregate_sleeptransformer_local(nchan)
     mean_fscore = mean(fscore)
     mean_sensitivity = mean(sensitivity)
     mean_specificity = mean(specificity)
-    kappa = kappaindex(yh,yt,4)
+    kappa = kappaindex(yh,yt,3)
     
     
     str = '';
@@ -118,7 +126,13 @@ function collection = aggregate_sleeptransformer_local(nchan)
     str
     
     collection = [acc, mean_fscore, kappa, mean_sensitivity, mean_specificity];
-    
+
+    acc = strrep(string(acc),'.',',');
+    kappa = strrep(string(kappa),'.',',');
+    mysensitivity = strrep((string(mysensitivity)),'.',',');
+    myselectivity = strrep(string(myselectivity),'.',',');
+    fscore = strrep(string(fscore),'.',',');
+
     if filter_out_artifacts==0
         Stages = ["Stage";"WAKE";"NREM";"REM";"ART"]; % W=1, N=2, R=3, A=4
         Acc = ["Acc"; acc; "-"; "-"; "-"];
