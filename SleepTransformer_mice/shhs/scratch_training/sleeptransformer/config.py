@@ -18,7 +18,6 @@ class Config(object):
         self.frame_attention_size = 64
 
         self.evaluate_every = 1000 # there are 19200 batches in one training epoch of the kornum_lab dataset. Right now, evaluating ~19 times per epoch
-        self.checkpoint_every = 1000
         self.early_stop_count = 50 # stop after 50 validation sreps without improvement ~= after 2.5 epochs without improvement
         self.minimum_training_updates = 60000
         self.num_fold_training_data = 7 # the number of folds to parition the training subjects. To circumvent the memory
