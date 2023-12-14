@@ -33,25 +33,26 @@ tf.app.flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft dev
 tf.app.flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
 
 # My Parameters
-tf.app.flags.DEFINE_string("eeg_train_data", "../train_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eeg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eeg_test_data", "../test_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_train_data", "../train_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("eog_test_data", "../test_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_train_data", "../train_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_eval_data", "../data/eval_data_1.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("emg_test_data", "../test_data.mat", "Point to directory of input data")
-tf.app.flags.DEFINE_string("out_dir", "./output/", "Point to output directory")
-tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
-tf.app.flags.DEFINE_integer("nclass", 4, "Number of classes (default: 4)")
+tf.app.flags.DEFINE_string("original_human_model", "/home/s202283/code/HUMMUSS/original_human_SleepTransformer_weights", "Point to checkpoint directory of original human model")
+tf.app.flags.DEFINE_string("eeg_train_data", "/home/s202283/code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/file_list/remote/eeg1/train_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eeg_eval_data", "", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eeg_test_data", "/home/s202283/code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/file_list/remote/eeg1/test_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_train_data", "", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_eval_data", "", "Point to directory of input data")
+tf.app.flags.DEFINE_string("eog_test_data", "", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_train_data", "", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_eval_data", "", "Point to directory of input data")
+tf.app.flags.DEFINE_string("emg_test_data", "/home/s202283/code/HUMMUSS/SleepTransformer_mice/shhs/data_preprocessing/kornum_data/file_list/remote/emg/test_list.txt", "Point to directory of input data")
+tf.app.flags.DEFINE_string("out_dir", "./outputs/test_tf2/", "Point to output directory")
+# tf.app.flags.DEFINE_string("checkpoint_dir", "./checkpoint/", "Point to checkpoint directory")
+tf.app.flags.DEFINE_integer("nclass", 5, "Number of classes (default: 4)")
 tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
 tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
 
 #tf.app.flags.DEFINE_float("dropout_keep_prob_rnn", 0.75, "Dropout keep probability (default: 0.75)")
-tf.app.flags.DEFINE_integer("seq_len", 20, "Sequence length (default: 10)")
+tf.app.flags.DEFINE_integer("seq_len", 21, "Sequence length (default: 10)")
 
-tf.app.flags.DEFINE_integer("num_blocks", 0, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
+tf.app.flags.DEFINE_integer("num_blocks", 4, "Number of transformer block (default: 0)") # if zero, specific parameters are expected for the numbers of frame blocks and seq blocks
 tf.app.flags.DEFINE_integer("frm_num_blocks", 1, "Number of transformer block (default: 0)")
 tf.app.flags.DEFINE_integer("seq_num_blocks", 1, "Number of transformer block (default: 0)")
 tf.app.flags.DEFINE_float("frm_fc_dropout", 0.1, "Dropout keep probability (default: 0.1)")
@@ -82,10 +83,10 @@ print("")
 # path where some output are stored
 out_path = os.path.abspath(os.path.join(os.path.curdir,FLAGS.out_dir))
 # path where checkpoint models are stored
-checkpoint_path = os.path.abspath(os.path.join(out_path,FLAGS.checkpoint_dir))
+# checkpoint_path = os.path.abspath(os.path.join(out_path,FLAGS.checkpoint_dir))
 human_model_checkpoint = FLAGS.original_human_model
 if not os.path.isdir(os.path.abspath(out_path)): os.makedirs(os.path.abspath(out_path))
-if not os.path.isdir(os.path.abspath(checkpoint_path)): os.makedirs(os.path.abspath(checkpoint_path))
+# if not os.path.isdir(os.path.abspath(checkpoint_path)): os.makedirs(os.path.abspath(checkpoint_path))
 
 with open(os.path.join(out_path,'test_settings.txt'), 'w') as f:
     for attr in sorted(flags_dict):  # python3
