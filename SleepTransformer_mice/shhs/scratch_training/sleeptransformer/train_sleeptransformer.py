@@ -45,6 +45,7 @@ tf.app.flags.DEFINE_integer("nclass_model", 3, "Number of classes for sleep stag
 tf.app.flags.DEFINE_integer("artifacts_label", 3, "Categorical label of the artifact class in the data")
 tf.app.flags.DEFINE_integer("frame_seq_len", 17, "Number of spectral columns of one PSG epoch (default: 17)")
 tf.app.flags.DEFINE_integer("batch_size", 32, "Number of instances per mini-batch (default: 32)")
+tf.app.flags.DEFINE_integer("evaluate_every", 1000, "Evaluate every this number of weight updates (default: 1000)")
 
 tf.app.flags.DEFINE_integer("seq_len", 21, "Sequence length (default: 10)")
 
@@ -95,6 +96,7 @@ with open(os.path.join(out_path,'training_settings.txt'), 'w') as f:
 
 config = Config()
 config.batch_size = FLAGS.batch_size
+config.evaluate_every = FLAGS.evaluate_every
 # config.learning_rate = 1e-4 / FLAGS.batch_size # scaling by btach size because now I'm normalizing the loss by the number of elements in batch
 config.nclass_data = FLAGS.nclass_data
 config.nclass_model = FLAGS.nclass_model
@@ -359,7 +361,7 @@ with tf.Graph().as_default():
             total_loss = 0
             yhat = np.zeros([len(gen.data_index), config.epoch_seq_len])
             # test with minibatch of 10x training minibatch to speed up
-            factor = 10
+            factor = 5
             num_batch_per_epoch = np.floor(len(gen.data_index) / (factor*config.batch_size)).astype(np.uint32)
             test_step = 1
             while test_step < num_batch_per_epoch:
@@ -447,10 +449,10 @@ with tf.Graph().as_default():
         #     return acc, bal_acc, yhat, output_loss, total_loss
 
         # test off the pretrained model (no finetuning whatsoever at this point)
-        print("{} Start off validation".format(datetime.now()))
-        eval_acc, eval_bal_acc, eval_yhat, eval_output_loss, eval_total_loss = \
-            _evaluate(gen=valid_gen_wrapper.gen, log_filename="eval_result_log.txt", config=config)
-        valid_gen_wrapper.gen.reset_pointer()
+        # print("{} Start off validation".format(datetime.now()))
+        # eval_acc, eval_bal_acc, eval_yhat, eval_output_loss, eval_total_loss = \
+        #     _evaluate(gen=valid_gen_wrapper.gen, log_filename="eval_result_log.txt", config=config)
+        # valid_gen_wrapper.gen.reset_pointer()
         
         start_time = time.time()
         # Loop over number of epochs
