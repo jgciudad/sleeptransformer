@@ -326,7 +326,7 @@ with tf.Graph().as_default():
             output_loss =0
             total_loss = 0
 
-            factor = 10
+            factor = 5
             yhat = np.zeros([len(gen.data_index), config.epoch_seq_len])
             score = np.zeros([len(gen.data_index), config.epoch_seq_len, config.nclass_model])
             # use 10x of minibatch size to speed up
