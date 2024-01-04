@@ -1,3 +1,8 @@
+% Plots the metrics stored in the file metrics.mat. In SleepTransformer,
+% metrics.mat is produced by write_metrics_to_excel.m and
+% aggregate_over_iterations.m . In L-SeqSleepNet, metrics.mat is produced
+% by evalute.py.
+
 clear
 close all
 
